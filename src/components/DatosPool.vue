@@ -1,6 +1,6 @@
 <template>
   <v-card elevation="12" light rounded="true" width="80%" class="mx-auto ma-4 text-no-wrap" color="#494949">
-    <v-card-title class="title font-weight-bold white--text text--lighten-1">Datos para delegar en el pool</v-card-title>
+    <v-card-title class="title font-weight-bold white--text text--lighten-1">{{ titulo }}</v-card-title>
     <v-card-text>
       <v-row dense>
         <v-col>
@@ -101,6 +101,7 @@ export default {
   name: 'DatosPool',
 
   data: () => ({
+    titulo: 'Datos para delegar en el pool',
     poolId: '3P5KC6qJH9TjDdQfgnvP1FpAg2Wa551JZEC',
     poolAlias: 'sarga',
     poolPCT: 5

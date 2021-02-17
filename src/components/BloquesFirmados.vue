@@ -85,7 +85,7 @@ export default {
   methods: {
     descargarBloques() {
       axios
-        .get('http://localhost:3000/api/blocks/list')
+        .get(`${process.env.VUE_APP_URL_BACKEND}/api/blocks/list`)
         .then((datos) => {
           if (datos && datos.data) {
             this.bloques = datos.data.map((d, i) => {
