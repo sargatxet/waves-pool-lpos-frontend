@@ -1,11 +1,5 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <v-img :src="require('../assets/logo.png')" class="my-3" contain height="200" />
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-img width="40%" class="mx-auto ma-4" contain :src="require('../assets/logo.png')" />
 </template>
 
 <script>
