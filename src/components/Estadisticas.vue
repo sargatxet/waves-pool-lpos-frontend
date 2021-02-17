@@ -3,7 +3,7 @@
     <v-card-title class="title font-weight-bold white--text text--lighten-1">Estadísticas del pool</v-card-title>
     <v-card-text>
       <v-row dense>
-        <v-col v-for="s in estadisticas">
+        <v-col v-for="s in estadisticas" :key="s.titulo">
           <v-card>
             <v-card-title>{{ s.titulo }}</v-card-title>
             <v-card-text>
