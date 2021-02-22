@@ -7,10 +7,6 @@ services:
     restart: always
     volumes:
       - app:/app
-    environment:
-      VUE_APP_URL_BACKEND: http://backend:3000
-    ports:
-      - '3001:80'
     networks:
       - apps
 
