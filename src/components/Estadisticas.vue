@@ -27,28 +27,66 @@ export default {
     estadisticas: {
       stakeActivo: { titulo: 'Stake activo', valor: 0 },
       stakeTotal: { titulo: 'Stake total', valor: 0 },
-      nDelegantes: { titulo: 'Nº delegantes', valor: 0 },
+      nDelegantes: { titulo: 'Nº delegaciones', valor: 0 },
       bloquesFirmados: { titulo: 'Bloques firmados', valor: 0 }
-    }
+    },
+    ultimoBloque: 0,
+    balancePool: 0,
+    bloques: [],
+    bloquesFirmados: [],
+    leasers: []
   }),
 
   created() {
-    this.descargarBloques()
+    this.actualizarDatos()
   },
 
   methods: {
-    descargarBloques() {
-      axios
-        .get(`${process.env.VUE_APP_URL_BACKEND}/api/stats`)
-        .then((datos) => {
-          if (datos && datos.data) {
-            this.estadisticas.stakeActivo.valor = datos.data.stakeActivo.toFixed(6)
-            this.estadisticas.stakeTotal.valor = datos.data.stakeTotal.toFixed(6)
-            this.estadisticas.nDelegantes.valor = datos.data.nDelegantes
-            this.estadisticas.bloquesFirmados.valor = datos.data.bloquesFirmados
-          }
-        })
-        .catch((err) => console.error(err))
+    async obtenerUltimoBloque() {
+      const datos = await axios.get(`${process.env.VUE_APP_URL_BACKEND}/node/status`)
+      if (datos && datos.data) this.ultimoBloque = datos.data.stateHeight
+      else this.ultimoBloque = 0
+    },
+    async actualizarBalance() {
+      const datos = await axios.get(`${process.env.VUE_APP_URL_BACKEND}/addresses/balance/${process.env.VUE_APP_DIR_POOL}`)
+      if (datos && datos.data) this.balancePool = datos.data.balance
+      else this.balancePool = 0
+    },
+    async descargarBloques() {
+      const datos = await axios.get(`${process.env.VUE_APP_URL_BACKEND}/leasing/active/${process.env.VUE_APP_DIR_POOL}`)
+      if (datos && datos.data) this.bloques = datos.data
+      else this.bloques = []
+    },
+    async descargarBloquesFirmados() {
+      const datos = await axios.get(`${process.env.VUE_APP_URL_BACKEND}/api/blocks/list`)
+      if (datos && datos.data) this.bloquesFirmados = datos.data
+      else this.bloquesFirmados = []
+    },
+    async actualizarDatos() {
+      // Descargamos datos
+      await this.obtenerUltimoBloque()
+      await this.actualizarBalance()
+      await this.descargarBloques()
+      await this.descargarBloquesFirmados()
+
+      // Calculamos el stake total
+      this.estadisticas.stakeTotal.valor = (this.bloques.reduce((t, l) => (t += l.amount), 0) + this.balancePool) / Math.pow(10, 8)
+
+      // Calculamos el stake activo
+      this.estadisticas.stakeActivo.valor =
+        (this.bloques.filter((l) => l.height <= this.ultimoBloque - 1000).reduce((t, l) => (t += l.amount), 0) + this.balancePool) / Math.pow(10, 8)
+
+      // Calculamos el nº de delegantes
+      this.leasers = this.bloques.reduce((t, l) => {
+        const i = t.findIndex((d) => d.sender == l.sender)
+        if (i == -1) t.push({ sender: l.sender, amount: l.amount })
+        else t[i].amount += l.amount
+        return t
+      }, [])
+      this.estadisticas.nDelegantes.valor = this.leasers.length
+
+      // Calculamos el nº de bloques firmados hasta el momento
+      this.estadisticas.bloquesFirmados.valor = this.bloquesFirmados.length
     }
   }
 }

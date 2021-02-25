@@ -53,6 +53,16 @@
             </v-card-text>
           </v-card>
         </v-col>
+        <v-col>
+          <v-card>
+            <v-card-title>Periodicidad reparto recompensas</v-card-title>
+            <v-card-text>
+              <h2>
+                <span style="color: blue">{{ periodicidadReparto }}</span>
+              </h2>
+            </v-card-text>
+          </v-card>
+        </v-col>
       </v-row>
       <v-row dense>
         <v-col>
@@ -102,9 +112,10 @@ export default {
 
   data: () => ({
     titulo: 'Datos para delegar en el pool',
-    poolId: '3P5KC6qJH9TjDdQfgnvP1FpAg2Wa551JZEC',
+    poolId: process.env.VUE_APP_DIR_POOL,
     poolAlias: 'sarga',
-    poolPCT: 5
+    poolPCT: 5,
+    periodicidadReparto: 'Semanal (domingo tarde/noche)'
   }),
 
   methods: {
