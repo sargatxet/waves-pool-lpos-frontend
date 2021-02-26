@@ -21,7 +21,19 @@
           sort-desc
           dense
           :search="search"
+          show-expand
+          single-expand
+          :expanded.sync="expanded"
+          @item-expanded="filtrarLeases"
         >
+          <template v-slot:expanded-item="{ headers }">
+            <td :colspan="headers.length">
+              Lista delegaciones
+
+              <v-data-table :headers="headersLeases" :items="leasesFiltrados" item-key="height" disable-pagination hide-default-footer disable-sort dense>
+              </v-data-table>
+            </td>
+          </template>
         </v-data-table>
       </template>
     </v-card-text>
@@ -41,6 +53,7 @@ export default {
     expanded: [],
     delegantes: [],
     datosDelegantes: [],
+    leasesFiltrados: [],
     search: '',
     headersDelegantes: [
       {
@@ -61,6 +74,22 @@ export default {
         value: 'stakeActivo',
         filterable: true
       }
+    ],
+    headersLeases: [
+      {
+        text: 'Height',
+        value: 'height'
+      },
+      {
+        text: 'Fecha',
+        value: 'fecha'
+      },
+      {
+        text: 'Cantidad',
+        align: 'end',
+        value: 'amount',
+        filterable: true
+      }
     ]
   }),
 
@@ -69,6 +98,19 @@ export default {
   },
 
   methods: {
+    filtrarLeases(data) {
+      const sender = data.item.sender
+      const leases = this.delegantes.filter((d) => d.sender == sender)
+      if (leases && leases.length > 0)
+        this.leasesFiltrados = leases[0].leases.map((l) => {
+          return {
+            height: l.height,
+            fecha: l.fecha,
+            amount: (l.amount / Math.pow(10, 8)).toFixed(6)
+          }
+        })
+      else this.leasesFiltrados = []
+    },
     descargarDelegantes() {
       this.delegantes = []
       this.datosDelegantes = []
