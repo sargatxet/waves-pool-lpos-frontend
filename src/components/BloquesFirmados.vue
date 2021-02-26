@@ -37,7 +37,6 @@ export default {
 
   data: () => ({
     titulo: 'Bloques firmados',
-    expanded: [],
     bloques: [],
     search: '',
     headersBloques: [
