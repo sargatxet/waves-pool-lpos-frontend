@@ -55,7 +55,7 @@
         </v-col>
         <v-col>
           <v-card>
-            <v-card-title>Periodicidad reparto recompensas</v-card-title>
+            <v-card-title>Reparto recompensas</v-card-title>
             <v-card-text>
               <h2>
                 <span style="color: blue">{{ periodicidadReparto }}</span>
@@ -115,7 +115,7 @@ export default {
     poolId: process.env.VUE_APP_DIR_POOL,
     poolAlias: 'sarga',
     poolPCT: 5,
-    periodicidadReparto: 'Semanal (domingo tarde/noche)'
+    periodicidadReparto: 'Semanal (domingos)'
   }),
 
   methods: {
