@@ -5,7 +5,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-responsive max-width="460">
+      <v-responsive max-width="460" class="font-weight-light">
         <v-text-field dense flat hide-details rounded solo-inverted append-icon="mdi-magnify" v-model="search" @change="filtrarLeaser()"> </v-text-field>
       </v-responsive>
     </v-card-title>
