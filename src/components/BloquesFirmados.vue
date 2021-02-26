@@ -3,22 +3,7 @@
     <v-card-title class="title font-weight-bold white--text text--lighten-1">{{ titulo }}</v-card-title>
     <v-card-text>
       <template>
-        <v-data-table
-          :headers="headersBloques"
-          :items="bloques"
-          item-key="height"
-          :items-per-page="10"
-          show-expand
-          :expanded.sync="expanded"
-          single-expand
-          class="elevation-1"
-          sort-by="nBloque"
-          sort-desc
-          dense
-        >
-          <template v-slot:expanded-item="{ headers, item }">
-            <td :colspan="headers.length">Información sobre el bloque {{ item.height }}</td>
-          </template>
+        <v-data-table :headers="headersBloques" :items="bloques" item-key="height" :items-per-page="5" class="elevation-1" sort-by="nBloque" sort-desc dense>
         </v-data-table>
       </template>
     </v-card-text>
@@ -45,6 +30,7 @@ export default {
       },
       {
         text: 'Id. bloque',
+        align: 'end',
         value: 'height'
       },
       {
@@ -53,27 +39,33 @@ export default {
       },
       {
         text: 'Recompensas bloque',
+        align: 'end',
         value: 'recompensasBloque'
       },
       {
         text: 'Recompensas pool (5%)',
+        align: 'end',
         value: 'recompensasPool'
       },
       {
         text: 'Recompensas delegantes',
+        align: 'end',
         value: 'recompensasDelegantes'
       },
       {
         text: 'Comisiones transferencias',
+        align: 'end',
         value: 'comisionesTransferencias'
       },
       {
         text: 'Nº delegantes',
+        align: 'end',
         value: 'nDelegantes'
       },
       {
-        text: 'Capital activo',
-        value: 'capitalDelegado'
+        text: 'Stake activo',
+        align: 'end',
+        value: 'skateDelegado'
       }
     ]
   }),
@@ -98,7 +90,7 @@ export default {
                 recompensasDelegantes: d.rewards.leased.leasersRewards.toFixed(6),
                 nDelegantes: d.rewards.leased.leasers.length,
                 comisionesTransferencias: d.rewards.leased.leasersFees.toFixed(4),
-                capitalDelegado: d.rewards.leased.totalLeased.toFixed(6)
+                skateDelegado: d.rewards.leased.totalLeased.toFixed(6)
               }
             })
           }
