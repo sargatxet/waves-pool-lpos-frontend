@@ -1,6 +1,14 @@
 <template>
   <v-card elevation="12" light rounded="true" width="80%" class="mx-auto ma-4" color="#494949">
-    <v-card-title class="title font-weight-bold white--text text--lighten-1">{{ titulo }}</v-card-title>
+    <v-card-title class="title font-weight-bold white--text text--lighten-1">
+      {{ titulo }}
+
+      <v-spacer></v-spacer>
+
+      <v-responsive max-width="460">
+        <v-text-field dense flat hide-details rounded solo-inverted append-icon="mdi-magnify" v-model="search" @change="filtrarLeaser()"> </v-text-field>
+      </v-responsive>
+    </v-card-title>
     <v-card-text>
       <template>
         <v-data-table
@@ -12,6 +20,7 @@
           sort-by="stakeActivo"
           sort-desc
           dense
+          :search="search"
         >
         </v-data-table>
       </template>
@@ -32,21 +41,25 @@ export default {
     expanded: [],
     delegantes: [],
     datosDelegantes: [],
+    search: '',
     headersDelegantes: [
       {
         text: 'Delegante',
         align: 'start',
-        value: 'sender'
+        value: 'sender',
+        filterable: true
       },
       {
         text: 'Total delegado',
         align: 'end',
-        value: 'stakeTotal'
+        value: 'stakeTotal',
+        filterable: true
       },
       {
         text: 'Stake activo',
         align: 'end',
-        value: 'stakeActivo'
+        value: 'stakeActivo',
+        filterable: true
       }
     ]
   }),
