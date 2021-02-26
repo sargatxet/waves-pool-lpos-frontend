@@ -1,9 +1,27 @@
 <template>
   <v-card elevation="12" light rounded="true" width="80%" class="mx-auto ma-4" color="#494949">
-    <v-card-title class="title font-weight-bold white--text text--lighten-1">{{ titulo }}</v-card-title>
+    <v-card-title class="title font-weight-bold white--text text--lighten-1">
+      {{ titulo }}
+
+      <v-spacer></v-spacer>
+
+      <v-responsive max-width="460">
+        <v-text-field dense flat hide-details rounded solo-inverted append-icon="mdi-magnify" v-model="search" @change="filtrarLeaser()"> </v-text-field>
+      </v-responsive>
+    </v-card-title>
     <v-card-text>
       <template>
-        <v-data-table :headers="headersBloques" :items="bloques" item-key="height" :items-per-page="5" class="elevation-1" sort-by="nBloque" sort-desc dense>
+        <v-data-table
+          :headers="headersBloques"
+          :items="bloques"
+          item-key="height"
+          :items-per-page="5"
+          class="elevation-1"
+          sort-by="nBloque"
+          sort-desc
+          dense
+          :search="search"
+        >
         </v-data-table>
       </template>
     </v-card-text>
@@ -21,6 +39,7 @@ export default {
     titulo: 'Bloques firmados',
     expanded: [],
     bloques: [],
+    search: '',
     headersBloques: [
       {
         text: 'Nº bloque',
@@ -31,11 +50,13 @@ export default {
       {
         text: 'Id. bloque',
         align: 'end',
-        value: 'height'
+        value: 'height',
+        filterable: true
       },
       {
         text: 'Fecha',
-        value: 'fecha'
+        value: 'fecha',
+        filterable: true
       },
       {
         text: 'Recompensas bloque',
@@ -65,7 +86,8 @@ export default {
       {
         text: 'Stake activo',
         align: 'end',
-        value: 'skateDelegado'
+        value: 'skateDelegado',
+        filterable: true
       }
     ]
   }),
