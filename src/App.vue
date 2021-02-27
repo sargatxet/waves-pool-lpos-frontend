@@ -5,11 +5,10 @@
 <script>
 export default {
   name: 'App',
-
-  components: {},
-
-  data: () => ({
-    //
-  })
+  async created() {
+    await this.$store.dispatch('getLastBlock')
+    await this.$store.dispatch('getSignedBlocks')
+    await this.$store.dispatch('getStats')
+  }
 }
 </script>

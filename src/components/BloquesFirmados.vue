@@ -13,7 +13,7 @@
       <template>
         <v-data-table
           :headers="headersBloques"
-          :items="bloques"
+          :items="$store.state.blocksView"
           item-key="height"
           :items-per-page="5"
           class="elevation-1"
@@ -29,15 +29,11 @@
 </template>
 
 <script>
-import axios from 'axios'
-import moment from 'moment'
-
 export default {
   name: 'BloquesFirmados',
 
   data: () => ({
     titulo: 'Bloques firmados',
-    bloques: [],
     search: '',
     headersBloques: [
       {
@@ -85,39 +81,10 @@ export default {
       {
         text: 'Stake activo',
         align: 'end',
-        value: 'skateDelegado',
+        value: 'staketeDelegado',
         filterable: true
       }
     ]
-  }),
-
-  created() {
-    this.descargarBloques()
-  },
-
-  methods: {
-    descargarBloques() {
-      axios
-        .get(`${process.env.VUE_APP_URL_BACKEND}/api/blocks/list`)
-        .then((datos) => {
-          if (datos && datos.data) {
-            this.bloques = datos.data.map((d, i) => {
-              return {
-                nBloque: i + 1,
-                height: d.height,
-                fecha: moment(d.fecha).format('yyyy/MM/DD HH:mm'),
-                recompensasBloque: d.rewards.totalRewards.toFixed(6),
-                recompensasPool: d.rewards.poolRewards.toFixed(6),
-                recompensasDelegantes: d.rewards.leased.leasersRewards.toFixed(6),
-                nDelegantes: d.rewards.leased.leasers.length,
-                comisionesTransferencias: d.rewards.leased.leasersFees.toFixed(4),
-                skateDelegado: d.rewards.leased.totalLeased.toFixed(6)
-              }
-            })
-          }
-        })
-        .catch((err) => console.error(err))
-    }
-  }
+  })
 }
 </script>
