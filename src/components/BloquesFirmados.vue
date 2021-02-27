@@ -5,8 +5,19 @@
 
       <v-spacer></v-spacer>
 
-      <v-responsive max-width="460" class="font-weight-light">
-        <v-text-field dense flat hide-details rounded solo-inverted append-icon="mdi-magnify" v-model="search" @change="filtrarLeaser()"> </v-text-field>
+      <v-responsive max-width="460" class="font-weight-regular">
+        <v-text-field
+          dense
+          flat
+          hide-details
+          rounded
+          solo-inverted
+          append-icon="mdi-magnify"
+          background-color="#898989"
+          v-model="search"
+          @change="filtrarLeaser()"
+        >
+        </v-text-field>
       </v-responsive>
     </v-card-title>
     <v-card-text>
