@@ -24,7 +24,7 @@
       <template>
         <v-data-table
           :headers="headersDelegantes"
-          :items="datosDelegantes"
+          :items="$store.state.leasersData"
           item-key="sender"
           :items-per-page="5"
           class="elevation-1"
@@ -52,18 +52,12 @@
 </template>
 
 <script>
-import axios from 'axios'
-import moment from 'moment'
-
 export default {
   name: 'Delegantes',
 
   data: () => ({
     titulo: 'Delegantes',
-    heightActual: 0,
     expanded: [],
-    delegantes: [],
-    datosDelegantes: [],
     leasesFiltrados: [],
     search: '',
     headersDelegantes: [
@@ -104,14 +98,10 @@ export default {
     ]
   }),
 
-  created() {
-    this.descargarDelegantes()
-  },
-
   methods: {
     filtrarLeases(data) {
       const sender = data.item.sender
-      const leases = this.delegantes.filter((d) => d.sender == sender)
+      const leases = this.$store.state.leasers.filter((d) => d.sender == sender)
       if (leases && leases.length > 0)
         this.leasesFiltrados = leases[0].leases.map((l) => {
           return {
@@ -121,56 +111,6 @@ export default {
           }
         })
       else this.leasesFiltrados = []
-    },
-    descargarDelegantes() {
-      this.delegantes = []
-      this.datosDelegantes = []
-      axios
-        .get(`${process.env.VUE_APP_URL_BACKEND}/node/status`)
-        .then((datos) => {
-          this.heightActual = datos.data.stateHeight
-          axios
-            .get(`${process.env.VUE_APP_URL_BACKEND}/leasing/active/${process.env.VUE_APP_DIR_POOL}`)
-            .then((datos) => {
-              if (datos && datos.data) {
-                this.delegantes = datos.data.reduce((t, l) => {
-                  const i = t.findIndex((d) => d.sender == l.sender)
-                  if (i == -1)
-                    t.push({
-                      sender: l.sender,
-                      leases: [
-                        {
-                          height: l.height,
-                          amount: l.amount,
-                          fecha: moment(new Date(l.timestamp)).format('yyyy/MM/DD HH:mm')
-                        }
-                      ],
-                      stakeTotal: l.amount,
-                      stakeActivo: l.height <= this.heightActual - 1000 ? l.amount : 0
-                    })
-                  else {
-                    t[i].stakeTotal += l.amount
-                    t[i].stakeActivo += l.height <= this.heightActual - 1000 ? l.amount : 0
-                    t[i].leases.push({
-                      height: l.height,
-                      amount: l.amount,
-                      fecha: moment(new Date(l.timestamp)).format('yyyy/MM/DD HH:mm')
-                    })
-                  }
-                  return t
-                }, [])
-                this.datosDelegantes = this.delegantes.map((d) => {
-                  return {
-                    sender: d.sender,
-                    stakeTotal: (d.stakeTotal / Math.pow(10, 8)).toFixed(6),
-                    stakeActivo: (d.stakeActivo / Math.pow(10, 8)).toFixed(6)
-                  }
-                })
-              }
-            })
-            .catch((err) => console.error(err))
-        })
-        .catch((err) => console.error(err))
     }
   }
 }

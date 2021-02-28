@@ -9,6 +9,7 @@ export default {
     await this.$store.dispatch('getLastBlock')
     await this.$store.dispatch('getSignedBlocks')
     await this.$store.dispatch('getStats')
+    await this.$store.dispatch('getLeasers')
   }
 }
 </script>

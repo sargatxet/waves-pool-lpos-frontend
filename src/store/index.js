@@ -16,7 +16,9 @@ export default new Vuex.Store({
       totalStake: { title: 'Stake total', value: 0 },
       nLeasers: { title: 'Nº delegaciones', value: 0 },
       nSignedBlocks: { title: 'Bloques firmados', value: 0 }
-    }
+    },
+    leasers: [],
+    leasersData: []
   },
   mutations: {
     blocksProcess(state) {
@@ -100,6 +102,50 @@ export default new Vuex.Store({
         .catch((err) => {
           context.state.stats.nLeasers.value = 0
         })
+    },
+    getLeasers(context) {
+      context.state.leasers = []
+      context.state.leasersData = []
+      axios
+        .get(`${process.env.VUE_APP_URL_BACKEND}/leasing/active/${process.env.VUE_APP_DIR_POOL}`)
+        .then((datos) => {
+          if (datos && datos.data) {
+            context.state.leasers = datos.data.reduce((t, l) => {
+              const i = t.findIndex((d) => d.sender == l.sender)
+              if (i == -1)
+                t.push({
+                  sender: l.sender,
+                  leases: [
+                    {
+                      height: l.height,
+                      amount: l.amount,
+                      fecha: moment(new Date(l.timestamp)).format('yyyy/MM/DD HH:mm')
+                    }
+                  ],
+                  stakeTotal: l.amount,
+                  stakeActivo: l.height <= context.state.lastBlock - 1000 ? l.amount : 0
+                })
+              else {
+                t[i].stakeTotal += l.amount
+                t[i].stakeActivo += l.height <= context.state.lastBlock - 1000 ? l.amount : 0
+                t[i].leases.push({
+                  height: l.height,
+                  amount: l.amount,
+                  fecha: moment(new Date(l.timestamp)).format('yyyy/MM/DD HH:mm')
+                })
+              }
+              return t
+            }, [])
+            context.state.leasersData = context.state.leasers.map((d) => {
+              return {
+                sender: d.sender,
+                stakeTotal: (d.stakeTotal / Math.pow(10, 8)).toFixed(6),
+                stakeActivo: (d.stakeActivo / Math.pow(10, 8)).toFixed(6)
+              }
+            })
+          }
+        })
+        .catch((err) => console.error(err))
     }
   },
   modules: {},
