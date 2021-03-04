@@ -8,6 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    lastUpdate: 'El pool no responde',
     lastBlock: 0,
     signedBlocks: [],
     blocksView: [],
@@ -43,14 +44,20 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    getLastBlock(context) {
+    getStatus(context) {
       axios
         .get(`${process.env.VUE_APP_URL_BACKEND}/node/status`)
         .then((datos) => {
-          if (datos && datos.data) context.state.lastBlock = datos.data.stateHeight
-          else context.state.lastBlock = 0
+          if (datos && datos.data) {
+            context.state.lastUpdate = moment(datos.data.updatedDate).format('yyyy/MM/DD HH:mm')
+            context.state.lastBlock = datos.data.stateHeight
+          } else {
+            context.state.lastUpdate = 'El pool no responde'
+            context.state.lastBlock = 0
+          }
         })
         .catch((err) => {
+          context.state.lastUpdate = 'El pool no responde'
           context.state.lastBlock = 0
         })
     },

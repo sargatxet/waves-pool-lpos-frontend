@@ -1,6 +1,8 @@
 <template>
   <v-card elevation="12" light rounded="true" width="80%" class="mx-auto ma-4 text-no-wrap" color="#494949">
-    <v-card-title class="title font-weight-bold white--text text--lighten-1">{{ titulo }}</v-card-title>
+    <v-card-title class="title font-weight-bold white--text text--lighten-1">
+      {{ titulo }}
+    </v-card-title>
     <v-card-text>
       <v-row dense>
         <v-col>
