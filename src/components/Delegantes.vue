@@ -86,10 +86,6 @@ export default {
         value: 'height'
       },
       {
-        text: 'Fecha',
-        value: 'fecha'
-      },
-      {
         text: 'Cantidad',
         align: 'end',
         value: 'amount',
@@ -106,7 +102,6 @@ export default {
         this.leasesFiltrados = leases[0].leases.map((l) => {
           return {
             height: l.height,
-            fecha: l.fecha,
             amount: (l.amount / Math.pow(10, 8)).toFixed(6)
           }
         })
